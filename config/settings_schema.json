@@ -9,8 +9,8 @@
       {
         "type": "font_picker",
         "id": "type_header_font",
-        "default": "helvetica_neue_n7",
-        "label": "Heading font"
+        "label": "Header font",
+        "default": "assistant_n4"
       },
       {
         "type": "range",
@@ -30,8 +30,8 @@
       {
         "type": "font_picker",
         "id": "type_body_font",
-        "default": "helvetica_neue_n4",
-        "label": "Body font"
+        "label": "Body font",
+        "default": "assistant_n4"
       },
       {
         "type": "range",
