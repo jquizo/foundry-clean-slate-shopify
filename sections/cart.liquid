@@ -1,0 +1,617 @@
+{% comment %}
+  sections/cart.liquid
+  Renders the cart page — item list, quantities, subtotal, and checkout button.
+  All updates post to Shopify's built-in /cart endpoint via standard HTML forms.
+{% endcomment %}
+
+{%- liquid
+  assign items_block    = section.blocks | where: 'type', 'cart_items'   | first
+  assign summary_block  = section.blocks | where: 'type', 'cart_summary' | first
+  assign empty_block    = section.blocks | where: 'type', 'empty_state'  | first
+-%}
+
+<div class="cart" id="CartSection-{{ section.id }}">
+
+  {%- if cart.item_count == 0 -%}
+
+    {%- comment -%}
+      ── EMPTY STATE ──
+      cart.item_count is 0, so there's nothing in the cart.
+      Show a friendly message and a link back to the shop.
+    {%- endcomment -%}
+    {%- if empty_block != blank -%}
+      <div class="cart__empty" {{ empty_block.shopify_attributes }}>
+        <h1 class="cart__empty-title">{{ 'cart.empty' | t }}</h1>
+        <p class="cart__empty-text">{{ empty_block.settings.empty_message }}</p>
+        <a href="{{ routes.all_products_collection_url }}" class="cart__empty-link btn">
+          {{ 'actions.continue_shopping' | t }}
+        </a>
+      </div>
+    {%- endif -%}
+
+  {%- else -%}
+
+    {%- comment -%}
+      ── FILLED CART ──
+      We use a single <form> that wraps both the item list and the summary.
+      This lets the "Update cart" button update all quantities in one go.
+      action="/cart" and method="post" are standard Shopify cart endpoints.
+    {%- endcomment -%}
+    <form action="{{ routes.cart_url }}" method="post" class="cart__form">
+
+      {%- comment -%} ── CART ITEMS ── {%- endcomment -%}
+      {%- if items_block != blank -%}
+        <div class="cart__items" {{ items_block.shopify_attributes }}>
+
+          <h1 class="cart__title">{{ 'cart.title' | t }}</h1>
+
+          {%- comment -%}
+            The cart items table.
+            Each row is one line item in the cart.
+            cart.items is the array — we loop over it just like collection.products.
+          {%- endcomment -%}
+          <table class="cart__table">
+            <thead class="cart__table-head">
+              <tr>
+                <th class="cart__col cart__col--product" scope="col">
+                  {{ 'cart.headings.product' | t }}
+                </th>
+                <th class="cart__col cart__col--price" scope="col">
+                  {{ 'cart.headings.price' | t }}
+                </th>
+                <th class="cart__col cart__col--quantity" scope="col">
+                  {{ 'cart.headings.quantity' | t }}
+                </th>
+                <th class="cart__col cart__col--total" scope="col">
+                  {{ 'cart.headings.total' | t }}
+                </th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {%- for item in cart.items -%}
+                <tr class="cart__row" id="CartItem-{{ item.index | plus: 1 }}">
+
+                  {%- comment -%} Product image + title + variant {%- endcomment -%}
+                  <td class="cart__col cart__col--product">
+                    <div class="cart__product">
+                      {%- if item.image -%}
+                        <a href="{{ item.url }}" class="cart__product-image-wrapper">
+                          {{ item.image | image_url: width: 120 | image_tag: class: 'cart__product-image', alt: item.image.alt, loading: 'lazy' }}
+                        </a>
+                      {%- endif -%}
+
+                      <div class="cart__product-details">
+                        <a href="{{ item.url }}" class="cart__product-title">
+                          {{ item.product.title }}
+                        </a>
+
+                        {%- comment -%}
+                          item.variant.title shows the selected variant e.g. "Red / Large".
+                          We hide it if the product only has one variant (the default).
+                        {%- endcomment -%}
+                        {%- unless item.variant.title == 'Default Title' -%}
+                          <p class="cart__product-variant">{{ item.variant.title }}</p>
+                        {%- endunless -%}
+
+                        {%- comment -%}
+                          Line item properties are custom fields attached to a cart item
+                          e.g. gift wrapping notes, personalisation text.
+                        {%- endcomment -%}
+                        {%- unless item.properties == empty -%}
+                          {%- for property in item.properties -%}
+                            {%- unless property.last == blank -%}
+                              <p class="cart__product-property">
+                                <span>{{ property.first }}:</span> {{ property.last }}
+                              </p>
+                            {%- endunless -%}
+                          {%- endfor -%}
+                        {%- endunless -%}
+
+                        <button
+                          type="button"
+                          class="cart__remove-btn"
+                          data-remove-item="{{ item.key }}"
+                          aria-label="{{ 'cart.remove_title' | t: title: item.title }}"
+                        >
+                          {{ 'cart.remove' | t }}
+                        </button>
+                      </div>
+                    </div>
+                  </td>
+
+                  {%- comment -%} Unit price {%- endcomment -%}
+                  <td class="cart__col cart__col--price" data-label="{{ 'cart.headings.price' | t }}">
+                    {%- if item.original_price != item.final_price -%}
+                      <s class="cart__price--compare">{{ item.original_price | money }}</s>
+                      <span class="cart__price--sale">{{ item.final_price | money }}</span>
+                    {%- else -%}
+                      <span>{{ item.original_price | money }}</span>
+                    {%- endif -%}
+                  </td>
+
+                  {%- comment -%}
+                    Quantity input.
+                    name="updates[]" is what Shopify expects when posting to /cart/update.
+                    Each input maps to the item at the same index in cart.items.
+                  {%- endcomment -%}
+                  <td class="cart__col cart__col--quantity" data-label="{{ 'cart.headings.quantity' | t }}">
+                    <div class="cart__quantity-wrapper">
+                      <label class="visually-hidden" for="Quantity-{{ item.index | plus: 1 }}">
+                        {{ 'products.product.quantity.label' | t }}
+                      </label>
+                      <input
+                        type="number"
+                        id="Quantity-{{ item.index | plus: 1 }}"
+                        class="cart__quantity-input"
+                        name="updates[]"
+                        value="{{ item.quantity }}"
+                        min="0"
+                        aria-label="{{ 'products.product.quantity.label' | t }}"
+                      >
+                    </div>
+                  </td>
+
+                  {%- comment -%} Line total (unit price × quantity) {%- endcomment -%}
+                  <td class="cart__col cart__col--total" data-label="{{ 'cart.headings.total' | t }}">
+                    <span>{{ item.final_line_price | money }}</span>
+                  </td>
+
+                </tr>
+              {%- endfor -%}
+            </tbody>
+          </table>
+
+          {%- comment -%}
+            Order note — an optional text field merchants can enable.
+            Posts to cart as "note", which Shopify attaches to the order.
+          {%- endcomment -%}
+          {%- if items_block.settings.show_note -%}
+            <div class="cart__note">
+              <label class="cart__note-label" for="CartNote">
+                {{ 'cart.note' | t }}
+              </label>
+              <textarea
+                id="CartNote"
+                class="cart__note-input"
+                name="note"
+                placeholder="{{ 'cart.note_placeholder' | t }}"
+                rows="3"
+              >{{ cart.note }}</textarea>
+            </div>
+          {%- endif -%}
+
+        </div>
+      {%- endif -%}
+
+      {%- comment -%} ── CART SUMMARY ── {%- endcomment -%}
+      {%- if summary_block != blank -%}
+        <div class="cart__summary" {{ summary_block.shopify_attributes }}>
+
+          <div class="cart__subtotal-row">
+            <span class="cart__subtotal-label">{{ 'cart.subtotal' | t }}</span>
+            <span class="cart__subtotal-price">{{ cart.total_price | money_with_currency }}</span>
+          </div>
+
+          {%- if summary_block.settings.show_tax_note -%}
+            <p class="cart__tax-note">{{ 'cart.tax_note' | t }}</p>
+          {%- endif -%}
+
+          <div class="cart__actions">
+            {%- comment -%}
+              Two buttons:
+              1. Update cart — posts the form to /cart/update, refreshing quantities
+              2. Checkout — posts the form to /cart (Shopify redirects to checkout)
+            {%- endcomment -%}
+            <button
+              type="submit"
+              name="update"
+              class="cart__update-btn btn btn--secondary"
+            >
+              {{ 'cart.update' | t }}
+            </button>
+
+            <button
+              type="submit"
+              name="checkout"
+              class="cart__checkout-btn btn btn--primary"
+            >
+              {{ 'cart.checkout' | t }}
+            </button>
+          </div>
+
+        </div>
+      {%- endif -%}
+
+    </form>
+
+  {%- endif -%}
+
+</div>
+
+{% style %}
+  .cart {
+    max-width: var(--layout-content-max);
+    margin: 0 auto;
+    padding: var(--space-8) var(--space-4);
+  }
+
+  /* ── Empty state ── */
+  .cart__empty {
+    text-align: center;
+    padding: var(--space-16) var(--space-4);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-4);
+  }
+
+  .cart__empty-title {
+    font-size: clamp(1.5rem, 3vw, 2.5rem);
+  }
+
+  .cart__empty-text {
+    color: var(--color-text-muted);
+    max-width: 40ch;
+  }
+
+  /* ── Filled cart layout ── */
+  .cart__form {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+  }
+
+  @media (min-width: 1024px) {
+    .cart__form {
+      grid-template-columns: 1fr 320px;
+      align-items: start;
+    }
+  }
+
+  /* ── Cart title ── */
+  .cart__title {
+    font-size: clamp(1.5rem, 3vw, 2.5rem);
+    margin-bottom: var(--space-6);
+  }
+
+  /* ── Table ── */
+  .cart__table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .cart__table-head {
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .cart__table-head th {
+    padding: var(--space-3) var(--space-2);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    text-align: left;
+    color: var(--color-text-muted);
+  }
+
+  .cart__col--price,
+  .cart__col--quantity,
+  .cart__col--total {
+    text-align: center;
+  }
+
+  /* ── Row ── */
+  .cart__row {
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .cart__row td {
+    padding: var(--space-4) var(--space-2);
+    font-size: var(--text-sm);
+    vertical-align: middle;
+  }
+
+  /* ── Product cell ── */
+  .cart__product {
+    display: flex;
+    gap: var(--space-4);
+    align-items: flex-start;
+  }
+
+  .cart__product-image-wrapper {
+    flex-shrink: 0;
+    width: 80px;
+    height: 80px;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    background-color: var(--color-bg);
+  }
+
+  .cart__product-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .cart__product-details {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .cart__product-title {
+    font-weight: 500;
+    color: var(--color-text);
+    text-decoration: none;
+    line-height: 1.3;
+  }
+
+  .cart__product-title:hover {
+    text-decoration: underline;
+  }
+
+  .cart__product-variant,
+  .cart__product-property {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+
+  .cart__remove-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    cursor: pointer;
+    text-decoration: underline;
+    margin-top: var(--space-1);
+  }
+
+  .cart__remove-btn:hover {
+    color: var(--color-text);
+  }
+
+  /* ── Price ── */
+  .cart__price--compare {
+    display: block;
+    color: var(--color-text-muted);
+    text-decoration: line-through;
+    font-size: var(--text-sm);
+  }
+
+  .cart__price--sale {
+    color: var(--color-error, #c0392b);
+    font-weight: 600;
+  }
+
+  /* ── Quantity input ── */
+  .cart__quantity-wrapper {
+    display: flex;
+    justify-content: center;
+  }
+
+  .cart__quantity-input {
+    width: 4rem;
+    text-align: center;
+    padding: var(--space-1) var(--space-2);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    font-size: var(--text-sm);
+    background-color: var(--color-bg);
+    color: var(--color-text);
+  }
+
+  .cart__quantity-input:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+
+  /* ── Order note ── */
+  .cart__note {
+    margin-top: var(--space-6);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .cart__note-label {
+    font-size: var(--text-sm);
+    font-weight: 500;
+  }
+
+  .cart__note-input {
+    width: 100%;
+    max-width: 480px;
+    padding: var(--space-2) var(--space-3);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    font-size: var(--text-sm);
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    resize: vertical;
+    font-family: inherit;
+  }
+
+  .cart__note-input:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+
+  /* ── Summary panel ── */
+  .cart__summary {
+    position: sticky;
+    top: var(--space-4);
+    background-color: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-6);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .cart__subtotal-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: var(--text-base);
+    font-weight: 600;
+  }
+
+  .cart__tax-note {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+
+  .cart__actions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  /* ── Buttons ── */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-3) var(--space-6);
+    border-radius: var(--radius-sm);
+    font-size: var(--text-base);
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    border: 1px solid transparent;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    width: 100%;
+  }
+
+  .btn--primary {
+    background-color: var(--color-primary);
+    color: var(--color-primary-text);
+    border-color: var(--color-primary);
+  }
+
+  .btn--primary:hover {
+    opacity: 0.9;
+  }
+
+  .btn--secondary {
+    background-color: transparent;
+    color: var(--color-text);
+    border-color: var(--color-border);
+  }
+
+  .btn--secondary:hover {
+    border-color: var(--color-text);
+  }
+
+  /* ── Responsive: stack on mobile ── */
+  @media (max-width: 767px) {
+    .cart__table-head {
+      display: none;
+    }
+
+    .cart__row td {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--space-2);
+    }
+
+    .cart__row td::before {
+      content: attr(data-label);
+      font-size: var(--text-sm);
+      font-weight: 600;
+      color: var(--color-text-muted);
+    }
+
+    .cart__col--product {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .cart__col--product::before {
+      display: none;
+    }
+  }
+{% endstyle %}
+
+<script>
+  {%- comment -%}
+    Remove item handler.
+    When a "Remove" button is clicked, we POST to /cart/change with
+    quantity: 0 for that item's key — Shopify removes it from the cart.
+    We then reload the page to reflect the updated cart.
+  {%- endcomment -%}
+  document.querySelectorAll('[data-remove-item]').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var key = this.dataset.removeItem;
+      window.Foundry.fetchJSON('/cart/change.js', {
+        method: 'POST',
+        body: JSON.stringify({ id: key, quantity: 0 })
+      }).then(function() {
+        window.location.reload();
+      });
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Cart",
+  "tag": "section",
+  "class": "section-cart",
+  "blocks": [
+    {
+      "type": "cart_items",
+      "name": "Cart items",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "show_note",
+          "label": "Show order note field",
+          "default": true
+        }
+      ]
+    },
+    {
+      "type": "cart_summary",
+      "name": "Cart summary",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "show_tax_note",
+          "label": "Show tax and shipping note",
+          "default": true
+        }
+      ]
+    },
+    {
+      "type": "empty_state",
+      "name": "Empty state",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "empty_message",
+          "label": "Empty cart message",
+          "default": "Looks like you haven't added anything yet."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Cart",
+      "blocks": [
+        { "type": "cart_items" },
+        { "type": "cart_summary" },
+        { "type": "empty_state" }
+      ]
+    }
+  ]
+}
+{% endschema %}

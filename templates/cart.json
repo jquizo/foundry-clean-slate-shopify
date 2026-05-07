@@ -1,0 +1,34 @@
+{
+  "sections": {
+    "cart": {
+      "type": "cart",
+      "blocks": {
+        "cart_items": {
+          "type": "cart_items",
+          "settings": {
+            "show_note": true
+          }
+        },
+        "cart_summary": {
+          "type": "cart_summary",
+          "settings": {
+            "show_tax_note": true
+          }
+        },
+        "empty_state": {
+          "type": "empty_state",
+          "settings": {
+            "empty_message": "Looks like you haven't added anything yet."
+          }
+        }
+      },
+      "block_order": [
+        "cart_items",
+        "cart_summary",
+        "empty_state"
+      ],
+      "settings": {}
+    }
+  },
+  "order": ["cart"]
+}

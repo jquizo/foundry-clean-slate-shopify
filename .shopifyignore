@@ -1,0 +1,6 @@
+# Files excluded from Shopify CLI operations (push, pull, dev).
+# Syntax is the same as .gitignore.
+
+# Editor atomic-write temp files — ignored to prevent upload errors
+# when the CLI watcher picks them up mid-save.
+**/*.tmp*

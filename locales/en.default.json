@@ -46,7 +46,14 @@
     "remove_title": "Remove {{ title }}",
     "update": "Update",
     "note": "Order note",
-    "note_placeholder": "Add a note to your order"
+    "note_placeholder": "Add a note to your order",
+    "headings": {
+      "product": "Product",
+      "price": "Price",
+      "quantity": "Quantity",
+      "total": "Total"
+    },
+    "tax_note": "Taxes and shipping calculated at checkout"
   },
 
   "products": {

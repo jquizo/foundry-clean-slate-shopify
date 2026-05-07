@@ -23,7 +23,7 @@ A clean, minimal Shopify base theme built from scratch. Designed to be reused ac
 ### JavaScript
 | File | Purpose |
 |------|---------|
-| `assets/theme.js` | Pub/sub, Web Components, cart helpers |
+| `assets/theme.js` | Pub/sub, Web Components (`FoundryDisclosure`, `ProductForm`), cart helpers |
 
 ### Conventions
 - BEM naming
@@ -63,17 +63,23 @@ git checkout -b client-name
 - [x] `layout/theme.liquid`
 - [x] `assets/tokens.css`
 - [x] `assets/base.css`
-- [x] `assets/theme.js`
+- [x] `assets/theme.js` — pub/sub, `FoundryDisclosure`, `ProductForm`, cart helpers
+- [x] `config/settings_schema.json`
+- [x] `config/settings_data.json`
+- [x] `locales/en.default.json`
+- [x] `.shopifyignore`
 - [x] `sections/header.liquid`
 - [x] `sections/footer.liquid`
 - [x] `sections/hero.liquid`
-- [x] `locales/en.default.json`
-- [x] `config/settings_schema.json`
+- [x] `sections/product.liquid`
+- [x] `sections/collections.liquid`
+- [x] `sections/cart.liquid`
+- [x] `templates/index.json`
+- [x] `templates/product.json`
+- [x] `templates/cart.json`
 
 ### Planned
-- [ ] `templates/product.json`
 - [ ] `templates/collection.json`
-- [ ] `templates/cart.json`
 - [ ] `templates/page.json`
 - [ ] `templates/404.liquid`
 - [ ] `snippets/product-card.liquid`
