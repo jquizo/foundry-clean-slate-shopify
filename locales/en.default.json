@@ -1,12 +1,12 @@
 {
-    "general": {
-      "currency": {
-        "go_to_cart": "Go to cart"
-      },
-      "pagination": {
-        "label": "Pagination"
-      }
+  "general": {
+    "currency": {
+      "go_to_cart": "Go to cart"
     },
+    "pagination": {
+      "label": "Pagination"
+    }
+  },
 
   "accessibility": {
     "skip_to_content": "Skip to content",
@@ -98,6 +98,11 @@
     },
     "cart": {
       "title": "Your cart"
+    },
+    "page": {
+      "breadcrumb_label": "Home",
+      "breadcrumb_aria_label": "Breadcrumb",
+      "image_alt_default": "Page image"
     }
   },
 
@@ -135,7 +140,7 @@
     "current_page": "Page {{ current }} of {{ total }}"
   },
 
-   "collections": {
+  "collections": {
     "general": {
       "product_count": {
         "one": "product",

@@ -1,0 +1,246 @@
+{%- comment -%} sections/page.liquid {%- endcomment -%}
+
+{%- liquid
+  if section.settings.content_width == 'narrow'
+    assign page_max_width = 'var(--layout-text-max)'
+  else
+    assign page_max_width = 'var(--layout-content-max)'
+  endif
+-%}
+
+<section
+  class="page-section"
+  data-section-id="{{ section.id }}"
+  style="--page-content-width: {{ page_max_width }};"
+>
+  <div class="page-section__inner">
+
+    {%- for block in section.blocks -%}
+      {%- case block.type -%}
+
+        {%- when 'page_header' -%}
+          <div class="page__header" {{ block.shopify_attributes }}>
+            {%- if block.settings.show_breadcrumb -%}
+              <nav class="page__breadcrumb" aria-label="{{ 'sections.page.breadcrumb_aria_label' | t }}">
+                <ol class="page__breadcrumb-list" role="list">
+                  <li class="page__breadcrumb-item">
+                    <a href="{{ routes.root_url }}" class="page__breadcrumb-link">
+                      {{ 'sections.page.breadcrumb_label' | t }}
+                    </a>
+                  </li>
+                  <li class="page__breadcrumb-item">
+                    <span class="page__breadcrumb-separator" aria-hidden="true">/</span>
+                    <span class="page__breadcrumb-current" aria-current="page">{{ page.title }}</span>
+                  </li>
+                </ol>
+              </nav>
+            {%- endif -%}
+            <h1 class="page__title">{{ page.title }}</h1>
+          </div>
+
+        {%- when 'page_content' -%}
+          <div class="page__content rte" {{ block.shopify_attributes }}>
+            {%- if page.content != blank -%}
+              {{ page.content }}
+            {%- endif -%}
+          </div>
+
+        {%- when 'image' -%}
+          <div class="page__image-wrapper" {{ block.shopify_attributes }}>
+            {%- if block.settings.image != blank -%}
+              {%- assign image_alt = block.settings.alt | default: block.settings.image.alt -%}
+              {%- if image_alt == blank -%}
+                {%- assign image_alt = 'sections.page.image_alt_default' | t -%}
+              {%- endif -%}
+              {%- assign image_class = 'page__image ' | append: block.settings.image_width -%}
+              {{
+                block.settings.image
+                | image_url: width: 1200
+                | image_tag:
+                  class: image_class,
+                  alt: image_alt,
+                  loading: 'lazy',
+                  widths: '320, 560, 800, 1200'
+              }}
+            {%- endif -%}
+          </div>
+
+        {%- when 'rich_text' -%}
+          <div class="page__rich-text rte" {{ block.shopify_attributes }}>
+            {%- if block.settings.content != blank -%}
+              {{ block.settings.content }}
+            {%- endif -%}
+          </div>
+
+      {%- endcase -%}
+    {%- endfor -%}
+
+  </div>
+</section>
+
+{% style %}
+  .page-section {
+    padding-block: var(--section-padding-block);
+  }
+
+  .page-section__inner {
+    max-width: var(--page-content-width);
+    margin-inline: auto;
+    padding-inline: var(--section-padding-inline);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+  }
+
+  /* ── Header ── */
+  .page__breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-bottom: var(--space-3);
+  }
+
+  .page__breadcrumb-list {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .page__breadcrumb-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .page__breadcrumb-link {
+    font-size: var(--text-sm);
+    color: var(--color-text-subtle);
+    transition: color var(--duration-fast) var(--ease-out);
+  }
+
+  .page__breadcrumb-link:hover {
+    color: var(--color-text);
+  }
+
+  .page__breadcrumb-separator,
+  .page__breadcrumb-current {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+
+  .page__title {
+    font-size: var(--text-3xl);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--leading-tight);
+    letter-spacing: var(--tracking-tight);
+    color: var(--color-text);
+  }
+
+  /* ── Image ── */
+  .page__image-wrapper {
+    display: block;
+  }
+
+  .page__image {
+    display: block;
+    height: auto;
+    border-radius: var(--radius-md);
+  }
+
+  .page__image--small  { max-width: 320px; }
+  .page__image--medium { max-width: 560px; }
+  .page__image--full   { max-width: 100%; width: 100%; }
+{% endstyle %}
+{% schema %}
+{
+  "name": "Page",
+  "tag": "section",
+  "class": "section-page",
+  "settings": [
+    {
+      "type": "select",
+      "id": "content_width",
+      "label": "Content width",
+      "default": "narrow",
+      "options": [
+        { "value": "narrow", "label": "Narrow (prose)" },
+        { "value": "full",   "label": "Full width" }
+      ]
+    }
+  ],
+  "blocks": [
+    {
+      "type": "page_header",
+      "name": "Page header",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "show_breadcrumb",
+          "label": "Show breadcrumb",
+          "default": false
+        }
+      ]
+    },
+    {
+      "type": "page_content",
+      "name": "Page content",
+      "limit": 1,
+      "settings": []
+    },
+    {
+      "type": "image",
+      "name": "Image",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "select",
+          "id": "image_width",
+          "label": "Image width",
+          "default": "page__image--medium",
+          "options": [
+            { "value": "page__image--small",  "label": "Small"  },
+            { "value": "page__image--medium", "label": "Medium" },
+            { "value": "page__image--full",   "label": "Full"   }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "alt",
+          "label": "Alt text",
+          "info": "Describe the image for screen readers. Defaults to the image's own alt text if blank."
+        }
+      ]
+    },
+    {
+      "type": "rich_text",
+      "name": "Rich text",
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "content",
+          "label": "Content"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Page",
+      "blocks": [
+        { "type": "page_header" },
+        { "type": "page_content" },
+        { "type": "image" },
+        { "type": "rich_text" }
+      ]
+    }
+  ]
+}
+{% endschema %}
