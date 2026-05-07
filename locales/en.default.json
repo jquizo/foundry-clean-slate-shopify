@@ -1,9 +1,12 @@
 {
-  "general": {
-    "currency": {
-      "go_to_cart": "Go to cart"
-    }
-  },
+    "general": {
+      "currency": {
+        "go_to_cart": "Go to cart"
+      },
+      "pagination": {
+        "label": "Pagination"
+      }
+    },
 
   "accessibility": {
     "skip_to_content": "Skip to content",
@@ -123,5 +126,20 @@
     "previous": "Previous",
     "next": "Next",
     "current_page": "Page {{ current }} of {{ total }}"
+  },
+
+   "collections": {
+    "general": {
+      "product_count": {
+        "one": "product",
+        "other": "products"
+      },
+      "no_matches": "No products found"
+    },
+    "sorting": {
+      "label": "Sort by"
+    }
   }
+
+  
 }
