@@ -43,10 +43,11 @@
   --color-brand-900:   #0c4a6e;
 
   /* Semantic — feedback colours */
-  --color-success:     #16a34a;
-  --color-warning:     #d97706;
-  --color-error:       #dc2626;
-  --color-info:        #2563eb;
+  --color-success:        #16a34a;
+  --color-warning:        #d97706;
+  --color-error:          #dc2626;
+  --color-error-subtle:   #fef2f2;
+  --color-info:           #2563eb;
 
   /* ---------------------------------------------------------------------------
      COLOUR — Semantic Aliases
