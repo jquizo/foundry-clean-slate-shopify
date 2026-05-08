@@ -75,6 +75,9 @@ git checkout -b client-name
 - [x] `sections/collections.liquid`
 - [x] `sections/cart.liquid`
 - [x] `sections/page.liquid`
+- [x] `sections/featured-collection.liquid`
+- [x] `sections/announcement-bar.liquid`
+- [x] `snippets/product-card.liquid`
 - [x] `templates/index.json`
 - [x] `templates/product.json`
 - [x] `templates/cart.json`

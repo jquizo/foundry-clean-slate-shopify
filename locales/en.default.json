@@ -103,6 +103,9 @@
       "breadcrumb_label": "Home",
       "breadcrumb_aria_label": "Breadcrumb",
       "image_alt_default": "Page image"
+    },
+    "announcement_bar": {
+      "dismiss": "Dismiss announcement"
     }
   },
 
