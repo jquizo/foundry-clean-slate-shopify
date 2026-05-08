@@ -70,22 +70,23 @@ git checkout -b client-name
 - [x] `.shopifyignore`
 - [x] `sections/header.liquid`
 - [x] `sections/footer.liquid`
+- [x] `sections/announcement-bar.liquid`
 - [x] `sections/hero.liquid`
-- [x] `sections/product.liquid`
+- [x] `sections/featured-collection.liquid`
 - [x] `sections/collections.liquid`
+- [x] `sections/product.liquid`
 - [x] `sections/cart.liquid`
 - [x] `sections/page.liquid`
-- [x] `sections/featured-collection.liquid`
-- [x] `sections/announcement-bar.liquid`
 - [x] `snippets/product-card.liquid`
 - [x] `templates/index.json`
+- [x] `templates/collection.json`
 - [x] `templates/product.json`
 - [x] `templates/cart.json`
 - [x] `templates/page.json`
 - [x] `templates/404.liquid`
 
-### Planned
-- [ ] `templates/collection.json`
-- [ ] `snippets/product-card.liquid`
-- [ ] `sections/featured-collection.liquid`
-- [ ] `sections/announcement-bar.liquid`
+### Not yet built
+- [ ] Blog / article templates and sections
+- [ ] Search template and section
+- [ ] Password page
+- [ ] Gift card template
