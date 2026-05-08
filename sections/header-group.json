@@ -2,12 +2,22 @@
   "type": "header",
   "name": "Header",
   "sections": {
+    "announcement-bar": {
+      "type": "announcement-bar",
+      "settings": {
+        "message": "Welcome to our store! Free shipping on orders over $50.",
+        "show_dismiss": true,
+        "background_color": "#0ea5e9",
+        "text_color": "#ffffff"
+      }
+    },
     "header": {
       "type": "header",
       "settings": {}
     }
   },
   "order": [
+    "announcement-bar",
     "header"
   ]
 }
