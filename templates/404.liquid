@@ -1,0 +1,76 @@
+{%- comment -%} templates/404.liquid {%- endcomment -%}
+
+<div class="not-found">
+  <div class="not-found__inner">
+    <p class="not-found__code" aria-hidden="true">404</p>
+    <h1 class="not-found__title">{{ 'templates.404.title' | t }}</h1>
+    <p class="not-found__subtext">{{ 'templates.404.subtext' | t }}</p>
+    <a href="{{ routes.root_url }}" class="not-found__link">
+      {{ 'templates.404.link' | t }}
+    </a>
+  </div>
+</div>
+
+{% style %}
+  .not-found {
+    padding-block: var(--section-padding-block);
+    padding-inline: var(--section-padding-inline);
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .not-found__inner {
+    max-width: var(--layout-text-max);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-4);
+  }
+
+  .not-found__code {
+    font-size: var(--text-4xl);
+    font-weight: var(--font-weight-bold);
+    letter-spacing: var(--tracking-tight);
+    line-height: 1;
+    color: var(--color-text-muted);
+  }
+
+  .not-found__title {
+    font-size: var(--text-3xl);
+    font-weight: var(--font-weight-bold);
+    letter-spacing: var(--tracking-tight);
+    line-height: var(--leading-tight);
+    color: var(--color-text);
+  }
+
+  .not-found__subtext {
+    font-size: var(--text-base);
+    line-height: var(--leading-relaxed);
+    color: var(--color-text-subtle);
+  }
+
+  .not-found__link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: var(--space-4);
+    padding: var(--space-3) var(--space-8);
+    font-size: var(--text-sm);
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-primary-text);
+    background-color: var(--color-primary);
+    border-radius: var(--radius-md);
+    transition:
+      background-color var(--duration-fast) var(--ease-out),
+      color var(--duration-fast) var(--ease-out);
+  }
+
+  .not-found__link:hover {
+    background-color: var(--color-primary-hover);
+    color: var(--color-primary-text);
+  }
+{% endstyle %}

@@ -79,10 +79,10 @@ git checkout -b client-name
 - [x] `templates/product.json`
 - [x] `templates/cart.json`
 - [x] `templates/page.json`
+- [x] `templates/404.liquid`
 
 ### Planned
 - [ ] `templates/collection.json`
-- [ ] `templates/404.liquid`
 - [ ] `snippets/product-card.liquid`
 - [ ] `sections/featured-collection.liquid`
 - [ ] `sections/announcement-bar.liquid`
