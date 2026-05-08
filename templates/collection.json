@@ -1,0 +1,42 @@
+{
+  "sections": {
+    "collection": {
+      "type": "collections",
+      "blocks": {
+        "collection_header": {
+          "type": "collection_header",
+          "settings": {
+            "show_description": true,
+            "show_product_count": true
+          }
+        },
+        "sort_and_filter": {
+          "type": "sort_and_filter",
+          "settings": {
+            "show_sort": true
+          }
+        },
+        "product_grid": {
+          "type": "product_grid",
+          "settings": {
+            "columns_desktop": 3,
+            "columns_mobile": 2,
+            "products_per_page": 24
+          }
+        },
+        "pagination": {
+          "type": "pagination",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "collection_header",
+        "sort_and_filter",
+        "product_grid",
+        "pagination"
+      ],
+      "settings": {}
+    }
+  },
+  "order": ["collection"]
+}
