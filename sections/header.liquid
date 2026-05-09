@@ -39,6 +39,13 @@
               </a>
             </li>
           {%- endfor -%}
+          <li class="header__nav-item">
+            {%- if customer -%}
+              <a href="{{ routes.account_url }}" class="header__nav-link">{{ 'sections.header.account' | t }}</a>
+            {%- else -%}
+              <a href="{{ routes.account_login_url }}" class="header__nav-link">{{ 'sections.header.login' | t }}</a>
+            {%- endif -%}
+          </li>
         </ul>
       </nav>
     {%- endif -%}
@@ -102,6 +109,13 @@
                 </a>
               </li>
             {%- endfor -%}
+            <li>
+              {%- if customer -%}
+                <a href="{{ routes.account_url }}" class="header__mobile-nav-link">{{ 'sections.header.account' | t }}</a>
+              {%- else -%}
+                <a href="{{ routes.account_login_url }}" class="header__mobile-nav-link">{{ 'sections.header.login' | t }}</a>
+              {%- endif -%}
+            </li>
           </ul>
         </nav>
       {%- endif -%}

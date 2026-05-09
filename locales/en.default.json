@@ -99,7 +99,9 @@
 
   "sections": {
     "header": {
-      "announcement": "Announcement"
+      "announcement": "Announcement",
+      "login": "Log in",
+      "account": "My Account"
     },
     "cart": {
       "title": "Your cart"
