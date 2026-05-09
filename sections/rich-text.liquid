@@ -1,0 +1,36 @@
+{%- comment -%} sections/rich-text.liquid {%- endcomment -%}
+
+<section class="rich-text" data-section-id="{{ section.id }}">
+  <div class="container container--text">
+    <div class="rte">
+      {{ section.settings.content }}
+    </div>
+  </div>
+</section>
+
+{% style %}
+  .rich-text {
+    padding-block: var(--section-padding-block);
+  }
+{% endstyle %}
+
+{% schema %}
+{
+  "name": "Rich text",
+  "tag": "section",
+  "class": "section-rich-text",
+  "settings": [
+    {
+      "type": "richtext",
+      "id": "content",
+      "label": "Content",
+      "default": "<p>Share information about your brand with your customers. Describe a product, make announcements, or welcome customers to your store.</p>"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Rich text"
+    }
+  ]
+}
+{% endschema %}

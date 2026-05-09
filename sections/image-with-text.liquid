@@ -1,0 +1,210 @@
+{%- comment -%} sections/image-with-text.liquid {%- endcomment -%}
+
+<section class="image-with-text" data-section-id="{{ section.id }}">
+  <div class="container">
+    <div class="iwt__grid" data-image-position="{{ section.settings.image_position }}">
+
+      <div class="iwt__text">
+
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="iwt__eyebrow">{{ section.settings.eyebrow }}</p>
+        {%- endif -%}
+
+        {%- if section.settings.heading != blank -%}
+          <h2 class="iwt__heading">{{ section.settings.heading }}</h2>
+        {%- endif -%}
+
+        {%- if section.settings.text != blank -%}
+          <div class="rte">{{ section.settings.text }}</div>
+        {%- endif -%}
+
+        {%- if section.settings.btn_label != blank and section.settings.btn_url != blank -%}
+          <a href="{{ section.settings.btn_url }}" class="iwt__btn">
+            {{ section.settings.btn_label }}
+          </a>
+        {%- endif -%}
+
+      </div>
+
+      <div class="iwt__media">
+        {%- if section.settings.image != blank -%}
+          {{
+            section.settings.image
+            | image_url: width: 1200
+            | image_tag:
+              alt: section.settings.image.alt | default: section.settings.heading,
+              loading: 'lazy',
+              sizes: '(min-width: 768px) 50vw, 100vw'
+          }}
+        {%- else -%}
+          {{ 'image' | placeholder_svg_tag: 'iwt__placeholder' }}
+        {%- endif -%}
+      </div>
+
+    </div>
+  </div>
+</section>
+
+{% style %}
+  .image-with-text {
+    padding-block: var(--section-padding-block);
+  }
+
+  .iwt__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--grid-gap-lg);
+    align-items: center;
+  }
+
+  .iwt__grid[data-image-position="left"] .iwt__media {
+    order: -1;
+  }
+
+  /* --- Media --- */
+
+  .iwt__media {
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    border-radius: var(--radius-lg);
+  }
+
+  .iwt__media img,
+  .iwt__placeholder {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* --- Text --- */
+
+  .iwt__text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .iwt__eyebrow {
+    font-size: var(--text-xs);
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: var(--tracking-wider);
+    text-transform: uppercase;
+    color: var(--color-primary);
+    max-width: none;
+  }
+
+  .iwt__heading {
+    font-family: var(--font-heading);
+    font-size: var(--text-3xl);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--leading-tight);
+    letter-spacing: var(--tracking-tight);
+    color: var(--color-text);
+    margin: 0;
+  }
+
+  /* --- CTA button --- */
+
+  .iwt__btn {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-3) var(--space-8);
+    font-size: var(--text-sm);
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: var(--tracking-wide);
+    background: var(--color-primary);
+    color: var(--color-primary-text);
+    border-radius: var(--radius-btn);
+    border: 2px solid var(--color-primary);
+    transition:
+      background-color var(--duration-fast) var(--ease-out),
+      border-color var(--duration-fast) var(--ease-out);
+  }
+
+  .iwt__btn:hover {
+    background: var(--color-primary-hover);
+    border-color: var(--color-primary-hover);
+    color: var(--color-primary-text);
+  }
+
+  /* --- Mobile --- */
+
+  @media (max-width: 767px) {
+    .iwt__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .iwt__grid[data-image-position="left"] .iwt__media {
+      order: unset;
+    }
+  }
+{% endstyle %}
+
+{% schema %}
+{
+  "name": "Image with text",
+  "tag": "section",
+  "class": "section-image-with-text",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "Image position",
+      "default": "right",
+      "options": [
+        { "value": "left",  "label": "Left" },
+        { "value": "right", "label": "Right" }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow text",
+      "placeholder": "Our story"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "About us"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text",
+      "default": "<p>Pair text with an image to focus on your chosen product, collection, or blog post. Add details on availability, style, or even provide a review.</p>"
+    },
+    {
+      "type": "text",
+      "id": "btn_label",
+      "label": "Button label",
+      "placeholder": "Learn more"
+    },
+    {
+      "type": "url",
+      "id": "btn_url",
+      "label": "Button URL"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Image with text"
+    }
+  ]
+}
+{% endschema %}
