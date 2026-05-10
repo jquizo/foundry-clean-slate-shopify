@@ -1,0 +1,166 @@
+{%- liquid
+  assign per_page = section.settings.products_per_page | default: 24
+-%}
+
+{%- paginate search.results by per_page -%}
+
+<div class="search" id="SearchSection-{{ section.id }}">
+
+  {%- comment -%} ── SEARCH FORM ── {%- endcomment -%}
+  <div class="search__form-wrapper">
+    <form class="search__form" action="{{ routes.search_url }}" method="get" role="search">
+      <input type="hidden" name="type" value="product">
+      <label class="visually-hidden" for="SearchInput-{{ section.id }}">
+        {{ 'templates.search.title' | t }}
+      </label>
+      <input
+        type="search"
+        id="SearchInput-{{ section.id }}"
+        class="search__input"
+        name="q"
+        value="{{ search.terms | escape }}"
+        placeholder="{{ 'templates.search.placeholder' | t }}"
+        autocomplete="off"
+      >
+      <button
+        type="submit"
+        class="search__submit"
+        aria-label="{{ 'templates.search.title' | t }}"
+      >
+        {%- render 'icon', icon: 'search', size: 20 -%}
+      </button>
+    </form>
+  </div>
+
+  {%- comment -%} ── RESULTS ── {%- endcomment -%}
+  {%- if search.performed -%}
+
+    {%- if search.results_count > 0 -%}
+
+      <p class="search__result-count">
+        {{- 'templates.search.results_with_count'
+            | t: count: search.results_count, terms: search.terms -}}
+      </p>
+
+      <div class="search__grid">
+        {%- for product in search.results -%}
+          {%- render 'product-card', product: product -%}
+        {%- endfor -%}
+      </div>
+
+      {%- render 'pagination', paginate: paginate -%}
+
+    {%- else -%}
+
+      <p class="search__no-results">
+        {{- 'templates.search.no_results' | t: terms: search.terms -}}
+      </p>
+
+    {%- endif -%}
+
+  {%- endif -%}
+
+</div>
+
+{%- endpaginate -%}
+
+{% style %}
+  .search {
+    max-width: var(--layout-content-max);
+    margin: 0 auto;
+    padding: var(--space-8) var(--space-4);
+  }
+
+  .search__form-wrapper {
+    max-width: 600px;
+    margin: 0 auto var(--space-10);
+  }
+
+  .search__form {
+    display: flex;
+    border: var(--border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+
+  .search__input {
+    flex: 1;
+    min-width: 0;
+    padding: var(--space-3) var(--space-4);
+    font-size: var(--text-base);
+    color: var(--color-text);
+    background: var(--color-bg);
+    border: none;
+    outline: none;
+  }
+
+  .search__input::placeholder {
+    color: var(--color-text-muted);
+  }
+
+  .search__submit {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-3) var(--space-4);
+    background: var(--color-primary);
+    color: var(--color-primary-text);
+    border: none;
+    cursor: pointer;
+    transition: opacity var(--duration-fast) var(--ease-out);
+  }
+
+  .search__submit:hover {
+    opacity: 0.85;
+  }
+
+  .search__result-count {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-6);
+    text-align: center;
+  }
+
+  .search__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-6);
+  }
+
+  @media (min-width: 768px) {
+    .search__grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .search__no-results {
+    text-align: center;
+    padding: var(--space-16) 0;
+    color: var(--color-text-muted);
+    font-size: var(--text-lg);
+  }
+{% endstyle %}
+
+{% schema %}
+{
+  "name": "Search",
+  "tag": "section",
+  "class": "section-search",
+  "settings": [
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "label": "Products per page",
+      "min": 8,
+      "max": 48,
+      "step": 4,
+      "default": 24
+    }
+  ],
+  "presets": [
+    {
+      "name": "Search"
+    }
+  ]
+}
+{% endschema %}
