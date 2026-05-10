@@ -108,6 +108,8 @@
   .announcement-bar__toggle {
     position: absolute;
     right: 0;
+    top: 50%;
+    transform: translateY(-50%);
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -132,9 +134,7 @@
   }
 
   .announcement-bar--collapsed .announcement-bar__message {
-    visibility: hidden;
-    width: 0;
-    overflow: hidden;
+    display: none;
   }
 
   .announcement-bar--collapsed .announcement-bar__toggle svg {
