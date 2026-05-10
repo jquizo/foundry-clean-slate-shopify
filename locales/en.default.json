@@ -182,6 +182,13 @@
     }
   },
 
+  "blog": {
+    "general": {
+      "read_more": "Read more",
+      "no_posts": "No posts found"
+    }
+  },
+
   "gift_card": {
     "issued": {
       "title": "Gift card",
