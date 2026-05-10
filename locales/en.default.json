@@ -180,7 +180,21 @@
     "sorting": {
       "label": "Sort by"
     }
+  },
+
+  "gift_card": {
+    "issued": {
+      "title": "Gift card",
+      "balance_remaining": "Remaining balance",
+      "original_value": "Original value",
+      "code_label": "Gift card code",
+      "expiry": "Expires {{ date }}",
+      "expired": "This gift card has expired",
+      "disabled": "This gift card has been disabled",
+      "print": "Print gift card",
+      "apple_wallet": "Add to Apple Wallet",
+      "shop_link": "Continue shopping"
+    }
   }
 
-  
 }
