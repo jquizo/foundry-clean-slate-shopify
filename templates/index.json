@@ -1,11 +1,122 @@
 {
   "sections": {
+
     "hero": {
       "type": "hero",
-      "settings": {}
+      "settings": {
+        "heading": "Welcome to our store",
+        "content_position": "middle",
+        "text_alignment": "center",
+        "min_height": 80,
+        "show_overlay": true,
+        "overlay_opacity": 40,
+        "bg_color": "#0a0a0a",
+        "text_color": "#ffffff"
+      }
+    },
+
+    "featured_collection": {
+      "type": "featured-collection",
+      "settings": {
+        "heading": "Featured collection",
+        "product_limit": 4,
+        "columns_desktop": 4,
+        "columns_mobile": "2",
+        "show_view_all": true
+      }
+    },
+
+    "image_with_text": {
+      "type": "image-with-text",
+      "settings": {
+        "image_position": "right",
+        "heading": "About us",
+        "text": "<p>Pair text with an image to focus on your chosen product, collection, or blog post. Add details on availability, style, or even provide a review.</p>",
+        "btn_label": "Learn more",
+        "btn_url": ""
+      }
+    },
+
+    "multicolumn": {
+      "type": "multicolumn",
+      "blocks": {
+        "col_1": {
+          "type": "column",
+          "settings": {
+            "heading": "Feature",
+            "text": "<p>Share a key benefit or feature of your product or service.</p>"
+          }
+        },
+        "col_2": {
+          "type": "column",
+          "settings": {
+            "heading": "Feature",
+            "text": "<p>Share a key benefit or feature of your product or service.</p>"
+          }
+        },
+        "col_3": {
+          "type": "column",
+          "settings": {
+            "heading": "Feature",
+            "text": "<p>Share a key benefit or feature of your product or service.</p>"
+          }
+        }
+      },
+      "block_order": ["col_1", "col_2", "col_3"],
+      "settings": {
+        "heading": "Why choose us"
+      }
+    },
+
+    "testimonials": {
+      "type": "testimonials",
+      "blocks": {
+        "review_1": {
+          "type": "testimonial",
+          "settings": {
+            "rating": 5,
+            "review": "<p>Share what a customer said about your product or service. A genuine review builds trust with potential buyers.</p>",
+            "author": "Happy Customer"
+          }
+        },
+        "review_2": {
+          "type": "testimonial",
+          "settings": {
+            "rating": 5,
+            "review": "<p>Share what a customer said about your product or service. A genuine review builds trust with potential buyers.</p>",
+            "author": "Happy Customer"
+          }
+        },
+        "review_3": {
+          "type": "testimonial",
+          "settings": {
+            "rating": 5,
+            "review": "<p>Share what a customer said about your product or service. A genuine review builds trust with potential buyers.</p>",
+            "author": "Happy Customer"
+          }
+        }
+      },
+      "block_order": ["review_1", "review_2", "review_3"],
+      "settings": {
+        "heading": "What our customers say"
+      }
+    },
+
+    "newsletter": {
+      "type": "newsletter",
+      "settings": {
+        "heading": "Subscribe to our newsletter",
+        "btn_label": "Subscribe"
+      }
     }
+
   },
   "order": [
-    "hero"
+    "hero",
+    "featured_collection",
+    "image_with_text",
+    "multicolumn",
+    "testimonials",
+    "newsletter"
   ]
 }
