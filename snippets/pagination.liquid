@@ -1,0 +1,109 @@
+{%- comment -%}
+  snippets/pagination.liquid
+  Usage: {% render 'pagination', paginate: paginate %}
+  Must be called inside a {% paginate %} block.
+  Parameters:
+    paginate — (object, required) the Shopify paginate object
+{%- endcomment -%}
+
+{%- if paginate.pages > 1 -%}
+
+<style>
+  .pagination { padding-block: var(--space-8); }
+
+  .pagination__list {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    list-style: none;
+  }
+
+  .pagination__item {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.25rem;
+    height: 2.25rem;
+    padding-inline: var(--space-2);
+    font-size: var(--text-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-subtle);
+    border: var(--border);
+    border-radius: var(--radius-md);
+    transition:
+      color var(--duration-fast) var(--ease-out),
+      background-color var(--duration-fast) var(--ease-out),
+      border-color var(--duration-fast) var(--ease-out);
+  }
+
+  .pagination__item--link:hover {
+    background: var(--color-bg-muted);
+    color: var(--color-text);
+  }
+
+  .pagination__item--current {
+    background: var(--color-primary);
+    color: var(--color-primary-text);
+    border-color: var(--color-primary);
+    font-weight: var(--font-weight-bold);
+  }
+
+  .pagination__item--gap {
+    border-color: transparent;
+    color: var(--color-text-muted);
+    cursor: default;
+  }
+
+  .pagination__item--prev,
+  .pagination__item--next {
+    padding-inline: var(--space-3);
+  }
+</style>
+
+<nav class="pagination" aria-label="{{ 'general.pagination.label' | t }}">
+  <ul class="pagination__list" role="list">
+
+    {%- if paginate.previous -%}
+      <li>
+        <a class="pagination__item pagination__item--prev" href="{{ paginate.previous.url }}">
+          <span class="visually-hidden">{{ 'general.pagination.previous' | t }}</span>
+          &#8249;
+        </a>
+      </li>
+    {%- endif -%}
+
+    {%- for part in paginate.parts -%}
+      {%- if part.is_link -%}
+        <li>
+          <a class="pagination__item pagination__item--link" href="{{ part.url }}">
+            {{ part.title }}
+          </a>
+        </li>
+      {%- elsif part.title == '...' -%}
+        <li>
+          <span class="pagination__item pagination__item--gap">&#8230;</span>
+        </li>
+      {%- else -%}
+        <li>
+          <span class="pagination__item pagination__item--current" aria-current="page">
+            {{ part.title }}
+          </span>
+        </li>
+      {%- endif -%}
+    {%- endfor -%}
+
+    {%- if paginate.next -%}
+      <li>
+        <a class="pagination__item pagination__item--next" href="{{ paginate.next.url }}">
+          &#8250;
+          <span class="visually-hidden">{{ 'general.pagination.next' | t }}</span>
+        </a>
+      </li>
+    {%- endif -%}
+
+  </ul>
+</nav>
+
+{%- endif -%}

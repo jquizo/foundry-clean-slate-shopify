@@ -4,7 +4,16 @@
       "go_to_cart": "Go to cart"
     },
     "pagination": {
-      "label": "Pagination"
+      "label": "Pagination",
+      "previous": "Previous",
+      "next": "Next"
+    },
+    "breadcrumbs": {
+      "label": "Breadcrumb",
+      "home": "Home",
+      "collections": "Collections",
+      "search_results": "Search results",
+      "page_not_found": "Page not found"
     },
     "password_page": {
       "password_label": "Password",

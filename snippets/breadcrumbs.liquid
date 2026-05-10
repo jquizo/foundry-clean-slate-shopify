@@ -1,0 +1,115 @@
+{%- comment -%}
+  snippets/breadcrumbs.liquid
+  Usage: {% render 'breadcrumbs' %}
+  No parameters — reads from Shopify global objects.
+  Renders nothing on the homepage.
+{%- endcomment -%}
+
+{%- unless request.page_type == 'index' -%}
+
+<style>
+  .breadcrumbs { padding-block: var(--space-3); }
+
+  .breadcrumbs__list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-1);
+    list-style: none;
+  }
+
+  .breadcrumbs__item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+
+  .breadcrumbs__item::after {
+    content: "›";
+    margin-left: var(--space-1);
+    color: var(--color-text-muted);
+  }
+
+  .breadcrumbs__item:last-child::after {
+    display: none;
+  }
+
+  .breadcrumbs__link {
+    color: var(--color-text-muted);
+    transition: color var(--duration-fast) var(--ease-out);
+  }
+
+  .breadcrumbs__link:hover {
+    color: var(--color-text);
+  }
+
+  .breadcrumbs__item--current span {
+    color: var(--color-text-subtle);
+  }
+</style>
+
+<nav class="breadcrumbs" aria-label="{{ 'general.breadcrumbs.label' | t }}">
+  <ol class="breadcrumbs__list" role="list">
+
+    <li class="breadcrumbs__item">
+      <a class="breadcrumbs__link" href="{{ routes.root_url }}">{{ 'general.breadcrumbs.home' | t }}</a>
+    </li>
+
+    {%- case request.page_type -%}
+
+      {%- when 'collection' -%}
+        <li class="breadcrumbs__item breadcrumbs__item--current">
+          <span aria-current="page">{{ collection.title }}</span>
+        </li>
+
+      {%- when 'product' -%}
+        {%- if collection -%}
+          <li class="breadcrumbs__item">
+            <a class="breadcrumbs__link" href="{{ collection.url }}">{{ collection.title }}</a>
+          </li>
+        {%- endif -%}
+        <li class="breadcrumbs__item breadcrumbs__item--current">
+          <span aria-current="page">{{ product.title }}</span>
+        </li>
+
+      {%- when 'page' -%}
+        <li class="breadcrumbs__item breadcrumbs__item--current">
+          <span aria-current="page">{{ page.title }}</span>
+        </li>
+
+      {%- when 'blog' -%}
+        <li class="breadcrumbs__item breadcrumbs__item--current">
+          <span aria-current="page">{{ blog.title }}</span>
+        </li>
+
+      {%- when 'article' -%}
+        <li class="breadcrumbs__item">
+          <a class="breadcrumbs__link" href="{{ blog.url }}">{{ blog.title }}</a>
+        </li>
+        <li class="breadcrumbs__item breadcrumbs__item--current">
+          <span aria-current="page">{{ article.title }}</span>
+        </li>
+
+      {%- when 'list-collections' -%}
+        <li class="breadcrumbs__item breadcrumbs__item--current">
+          <span aria-current="page">{{ 'general.breadcrumbs.collections' | t }}</span>
+        </li>
+
+      {%- when 'search' -%}
+        <li class="breadcrumbs__item breadcrumbs__item--current">
+          <span aria-current="page">{{ 'general.breadcrumbs.search_results' | t }}</span>
+        </li>
+
+      {%- when '404' -%}
+        <li class="breadcrumbs__item breadcrumbs__item--current">
+          <span aria-current="page">{{ 'general.breadcrumbs.page_not_found' | t }}</span>
+        </li>
+
+    {%- endcase -%}
+
+  </ol>
+</nav>
+
+{%- endunless -%}
