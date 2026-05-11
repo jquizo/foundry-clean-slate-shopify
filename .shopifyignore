@@ -10,10 +10,10 @@ README.md
 .gitignore
 
 # Docs and planning
-docs/
+docs/**
 
 # Reference directory — not part of the deployable theme
-foundry-clean-base/
+foundry-clean-base/**
 
 # Playwright MCP screenshots / artifacts
-.playwright-mcp/
+.playwright-mcp/**
