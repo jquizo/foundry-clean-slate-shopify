@@ -11,3 +11,6 @@ Thumbs.db
 
 # AI planning docs
 docs/superpowers/
+
+# Playwright MCP screenshots / artifacts
+.playwright-mcp/

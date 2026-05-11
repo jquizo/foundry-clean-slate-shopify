@@ -14,3 +14,6 @@ docs/
 
 # Reference directory — not part of the deployable theme
 foundry-clean-base/
+
+# Playwright MCP screenshots / artifacts
+.playwright-mcp/
