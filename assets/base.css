@@ -178,7 +178,7 @@ button {
   cursor: pointer;
   border: none;
   background: none;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-btn);
   transition:
     color var(--duration-fast) var(--ease-out),
     background-color var(--duration-fast) var(--ease-out),
