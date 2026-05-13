@@ -4,6 +4,17 @@
   assign text_align = section.settings.text_alignment
   assign content_position = section.settings.content_position
   assign overlay_alpha = section.settings.overlay_opacity | divided_by: 100.0
+  case section.settings.button_size
+    when 'small'
+      assign btn_padding   = 'var(--space-2) var(--space-5)'
+      assign btn_font_size = 'var(--text-xs)'
+    when 'large'
+      assign btn_padding   = 'var(--space-4) var(--space-10)'
+      assign btn_font_size = 'var(--text-base)'
+    else
+      assign btn_padding   = 'var(--space-3) var(--space-8)'
+      assign btn_font_size = 'var(--text-sm)'
+  endcase
 -%}
 
 <section
@@ -94,6 +105,14 @@
     </div>
   </div>
 
+  {%- if section.settings.show_scroll_indicator -%}
+    <div class="hero__scroll-indicator" aria-hidden="true">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M6 9l6 6 6-6"/>
+      </svg>
+    </div>
+  {%- endif -%}
+
 </section>
 
 {% style %}
@@ -149,7 +168,7 @@
   /* --- Content --- */
 
   .hero__content {
-    max-width: 640px;
+    max-width: {{ section.settings.content_max_width }}px;
   }
 
   .hero__content--center {
@@ -228,8 +247,8 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: var(--space-3) var(--space-8);
-    font-size: var(--text-sm);
+    padding: {{ btn_padding }};
+    font-size: {{ btn_font_size }};
     font-weight: var(--font-weight-semibold);
     letter-spacing: var(--tracking-wide);
     border-radius: var(--radius-btn);
@@ -275,6 +294,22 @@
     .hero__subheading {
       font-size: var(--text-base);
     }
+  }
+
+  .hero__scroll-indicator {
+    position: absolute;
+    bottom: var(--space-6);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    color: {{ section.settings.text_color }};
+    opacity: 0.7;
+    animation: hero-bounce 1.5s var(--ease-in-out) infinite;
+  }
+
+  @keyframes hero-bounce {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50%       { transform: translateX(-50%) translateY(8px); }
   }
 {% endstyle %}
 
@@ -341,6 +376,17 @@
       "label": "Secondary button URL"
     },
     {
+      "type": "select",
+      "id": "button_size",
+      "label": "Button size",
+      "default": "medium",
+      "options": [
+        { "value": "small",  "label": "Small" },
+        { "value": "medium", "label": "Medium" },
+        { "value": "large",  "label": "Large" }
+      ]
+    },
+    {
       "type": "header",
       "content": "Layout"
     },
@@ -385,6 +431,22 @@
         { "value": "center", "label": "Centre" },
         { "value": "right",  "label": "Right" }
       ]
+    },
+    {
+      "type": "range",
+      "id": "content_max_width",
+      "min": 400,
+      "max": 900,
+      "step": 20,
+      "unit": "px",
+      "label": "Content max width",
+      "default": 640
+    },
+    {
+      "type": "checkbox",
+      "id": "show_scroll_indicator",
+      "label": "Show scroll indicator",
+      "default": false
     },
     {
       "type": "header",
