@@ -74,6 +74,11 @@
   --color-primary-hover:   var(--color-brand-600);
   --color-primary-text:    var(--color-white);
 
+  /* Button — independent from primary so merchants can style buttons separately */
+  --color-btn-bg:          var(--color-primary);
+  --color-btn-bg-hover:    var(--color-primary-hover);
+  --color-btn-text:        var(--color-primary-text);
+
   /* ---------------------------------------------------------------------------
      TYPOGRAPHY — Families
      Shopify injects font face declarations via settings_schema.json.

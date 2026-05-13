@@ -112,6 +112,10 @@
     "name": "Buttons",
     "settings": [
       {
+        "type": "header",
+        "content": "Shape"
+      },
+      {
         "type": "select",
         "id": "button_radius",
         "label": "Button shape",
@@ -122,6 +126,28 @@
           { "value": "8px",    "label": "Rounded" },
           { "value": "9999px", "label": "Pill" }
         ]
+      },
+      {
+        "type": "header",
+        "content": "Colours"
+      },
+      {
+        "type": "color",
+        "id": "button_bg",
+        "label": "Button background",
+        "default": "#0ea5e9"
+      },
+      {
+        "type": "color",
+        "id": "button_bg_hover",
+        "label": "Button background (hover)",
+        "default": "#0284c7"
+      },
+      {
+        "type": "color",
+        "id": "button_text",
+        "label": "Button text",
+        "default": "#ffffff"
       }
     ]
   },
