@@ -3,6 +3,7 @@
 {%- liquid
   assign text_align = section.settings.text_alignment
   assign content_position = section.settings.content_position
+  assign overlay_alpha = section.settings.overlay_opacity | divided_by: 100.0
 -%}
 
 <section
@@ -52,7 +53,7 @@
 
   {%- comment -%} Overlay {%- endcomment -%}
   {%- if section.settings.show_overlay -%}
-    <div class="hero__overlay" style="--overlay-opacity: {{ section.settings.overlay_opacity | divided_by: 100.0 }};"></div>
+    <div class="hero__overlay"></div>
   {%- endif -%}
 
   {%- comment -%} Content {%- endcomment -%}
@@ -133,7 +134,7 @@
     position: absolute;
     inset: 0;
     z-index: 1;
-    background: rgb(0 0 0 / var(--overlay-opacity, 0.4));
+    background: {{ section.settings.overlay_color | color_modify: 'alpha', overlay_alpha }};
   }
 
   /* --- Container --- */
@@ -182,7 +183,7 @@
   /* --- Heading --- */
 
   .hero__heading {
-    font-size: var(--text-4xl);
+    font-size: {{ section.settings.heading_size }};
     font-weight: var(--font-weight-bold);
     line-height: var(--leading-tight);
     letter-spacing: var(--tracking-tight);
@@ -267,8 +268,8 @@
   /* --- Responsive --- */
 
   @media (max-width: 767px) {
-    .hero__heading {
-      font-size: var(--text-3xl);
+    .hero {
+      min-height: {{ section.settings.min_height_mobile }}vh;
     }
 
     .hero__subheading {
@@ -306,6 +307,18 @@
       "placeholder": "A short line that supports your heading"
     },
     {
+      "type": "select",
+      "id": "heading_size",
+      "label": "Heading size",
+      "default": "var(--text-4xl)",
+      "options": [
+        { "value": "var(--text-2xl)", "label": "Small" },
+        { "value": "var(--text-3xl)", "label": "Medium" },
+        { "value": "var(--text-4xl)", "label": "Large" },
+        { "value": "clamp(3rem, 6vw, 5rem)", "label": "Extra large" }
+      ]
+    },
+    {
       "type": "text",
       "id": "btn_label",
       "label": "Primary button label",
@@ -340,6 +353,16 @@
       "unit": "vh",
       "label": "Minimum height",
       "default": 80
+    },
+    {
+      "type": "range",
+      "id": "min_height_mobile",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "vh",
+      "label": "Minimum height (mobile)",
+      "default": 50
     },
     {
       "type": "select",
@@ -406,6 +429,12 @@
       "id": "show_overlay",
       "label": "Show dark overlay",
       "default": true
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Overlay colour",
+      "default": "#000000"
     },
     {
       "type": "range",
